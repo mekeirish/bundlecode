@@ -1,6 +1,6 @@
 {
-  "name": "bundlecode",
-  "short_name": "bundlecode",
+  "name": "Bundlecode",
+  "short_name": "Bundlecode",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a1c20",
