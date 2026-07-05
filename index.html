@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>HUB // TAILWIND CYBER</title>
@@ -395,18 +393,17 @@
         }
     </style>
 
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#4b6cb7">
-<link rel="apple-touch-icon" href="icon.png"></head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon.png">
+</head>
 <body>
 
     <nav class="nav-bar">
-        <div id="socket-power" class="btn-socket"
-             onpointerdown="startPress(event)"
-             onpointerup="endPress(event)"
-             onpointerleave="cancelPress(event)"
-             onpointercancel="cancelPress(event)"
-             oncontextmenu="event.preventDefault()">
+        <div id="socket-power" class="btn-socket" onpointerdown="startPress(event)" onpointerup="endPress(event)" onpointerleave="cancelPress(event)" onpointercancel="cancelPress(event)" oncontextmenu="event.preventDefault()">
             <div class="led"></div>
             <button class="pwa-btn">PWR</button>
         </div>
@@ -429,8 +426,8 @@
             <div id="modal-fields-container"></div>
             <div class="add-section">
                 <div class="add-row">
-                    <input type="text" id="add-name" placeholder="Nom" />
-                    <input type="url" id="add-url" placeholder="https://..." />
+                    <input type="text" id="add-name" placeholder="Nom">
+                    <input type="url" id="add-url" placeholder="https://...">
                 </div>
                 <button class="add-btn" id="add-btn">➕ Ajouter</button>
                 <button class="cover-btn" id="cover-btn">Cover: OFF</button>
@@ -771,6 +768,14 @@
         updateCoverUI();
     </script>
 
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}</script>
-</body>
-</html>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Service Worker enregistré !'))
+        .catch(err => console.error('Erreur SW :', err));
+    });
+  }
+</script>
+</body></html>
