@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Base</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 20% 30%, #0b0e1a, #060810 90%);
+            background-attachment: fixed;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 12px;
+            gap: 8px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            background: rgba(20, 24, 40, 0.45);
+            backdrop-filter: blur(12px) saturate(1.4);
+            -webkit-backdrop-filter: blur(12px) saturate(1.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            z-index: 10;
+            position: relative;
+        }
+        .nav-bar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(120, 140, 255, 0.3), transparent);
+        }
+        .btn-socket {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 48px;
+            padding: 6px 4px 8px 4px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
+        }
+        .btn-socket:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .power-socket { background: rgba(180, 40, 40, 0.12); border-color: rgba(255, 80, 80, 0.15); }
+        .power-socket:hover { background: rgba(180, 40, 40, 0.2); }
+        .led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(60, 70, 90, 0.6);
+            box-shadow: 0 0 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .pwa-btn {
+            width: 100%;
+            border: none;
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #b0b8d0;
+            cursor: pointer;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 30px;
+        }
+        .pwa-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e8eeff;
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+        .pwa-btn:active { transform: scale(0.96); }
+        .power-btn {
+            background: rgba(200, 60, 60, 0.08);
+            color: #ff8a8a;
+            border-color: rgba(255, 100, 100, 0.1);
+            font-size: 8px;
+            letter-spacing: 1px;
+        }
+        .power-btn:hover { background: rgba(200, 60, 60, 0.15); color: #ffb0b0; }
+        .pwa-btn.active {
+            color: #ffffff;
+            background: rgba(120, 140, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-color: rgba(120, 140, 255, 0.4);
+            box-shadow: 0 4px 16px rgba(80, 100, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(1px) scale(1.02);
+        }
+        .power-btn.active {
+            background: rgba(255, 60, 60, 0.2);
+            border-color: rgba(255, 80, 80, 0.5);
+            box-shadow: 0 4px 20px rgba(255, 60, 60, 0.25);
+            color: #ffb0b0;
+        }
+        .btn-socket.active-power .led {
+            background: #ff3b30;
+            box-shadow: 0 0 12px #ff3b30, inset 0 1px 2px rgba(255,255,255,0.5);
+        }
+        .btn-socket.active-pwa .led {
+            background: #5e5ce0;
+            box-shadow: 0 0 16px #5e5ce0, inset 0 1px 2px rgba(255,255,255,0.5);
+        }
+        .workspace {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            background: radial-gradient(ellipse at 30% 40%, rgba(40, 60, 120, 0.2), rgba(10, 12, 20, 0.9) 80%);
+            background-attachment: fixed;
+            position: relative;
+        }
+        .workspace::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.04"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+        .phone-container {
+            width: 100%;
+            height: 100%;
+            max-width: 412px;
+            max-height: 860px;
+            background: rgba(10, 12, 22, 0.7);
+            backdrop-filter: blur(20px) saturate(1.6);
+            -webkit-backdrop-filter: blur(20px) saturate(1.6);
+            border-radius: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04) inset, 0 0 40px rgba(80, 100, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.02) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .screen-glass {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            border-radius: 42px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.02);
+        }
+        .power-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0,0,0,0.92);
+            z-index: 30;
+            transition: opacity 0.4s ease;
+        }
+        .power-overlay.cover-image {
+            background-image: url('cover.png');
+            filter: grayscale(100%) contrast(1.1) brightness(0.85);
+            opacity: 0.3;
+            background-blend-mode: overlay;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.12"/></svg>'), url('cover.png');
+            box-shadow: inset 0 8px 20px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .hub-powered-on .power-overlay { opacity: 0; pointer-events: none; }
+        .content-area {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+            background: transparent;
+        }
+        iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: rgba(0,0,0,0.3);
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+        iframe.active {
+            display: block;
+        }
+        /* ===== MODALE ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: rgba(16, 18, 32, 0.75);
+            backdrop-filter: blur(24px) saturate(1.6);
+            -webkit-backdrop-filter: blur(24px) saturate(1.6);
+            border-radius: 28px;
+            max-width: 520px;
+            width: 100%;
+            padding: 28px 24px 30px;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.04);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 28px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(120,140,255,0.15), rgba(255,255,255,0.02));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 14px;
+        }
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b8b8ff, #7a78ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 30px rgba(94,92,224,0.15);
+        }
+        .modal-close {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: #aaa;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.15); }
+        .modal-field {
+            margin-bottom: 16px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.04);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            transition: border-color 0.2s;
+        }
+        .modal-field:hover { border-color: rgba(255,255,255,0.08); }
+        .modal-field .field-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .modal-field .field-row label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #7a78ff;
+            letter-spacing: 0.6px;
+            min-width: 34px;
+            font-weight: 700;
+        }
+        .modal-field .field-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+        }
+        .modal-field .field-row input:focus {
+            outline: none;
+            border-color: #5e5ce0;
+            box-shadow: 0 0 20px rgba(94,92,224,0.1), inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .modal-field .field-row input[type="url"] { font-size: 12px; }
+        .modal-field .delete-btn {
+            background: rgba(40,10,10,0.6);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,70,70,0.15);
+            border-radius: 8px;
+            padding: 5px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-end;
+            backdrop-filter: blur(2px);
+        }
+        .modal-field .delete-btn:hover {
+            background: rgba(60,20,20,0.8);
+            border-color: rgba(255,70,70,0.3);
+            box-shadow: 0 0 20px rgba(255,70,70,0.1);
+        }
+        .add-section {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .add-section .add-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .add-section .add-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+            min-width: 120px;
+        }
+        .add-section .add-row input:focus {
+            outline: none;
+            border-color: #5e5ce0;
+            box-shadow: 0 0 20px rgba(94,92,224,0.1), inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .add-section .add-btn {
+            background: rgba(40,40,80,0.4);
+            backdrop-filter: blur(4px);
+            color: #b8b8ff;
+            border: 1px solid rgba(94,92,224,0.2);
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-end;
+        }
+        .add-section .add-btn:hover {
+            background: rgba(60,60,120,0.5);
+            border-color: #5e5ce0;
+            box-shadow: 0 0 25px rgba(94,92,224,0.15);
+        }
+        .cover-btn {
+            background: rgba(20,20,40,0.4);
+            backdrop-filter: blur(4px);
+            color: #aab;
+            border: 1px solid rgba(100,100,200,0.15);
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            text-align: center;
+        }
+        .cover-btn.active {
+            background: rgba(60,60,140,0.4);
+            border-color: #5e5ce0;
+            color: #d0d0ff;
+            box-shadow: 0 0 25px rgba(94,92,224,0.1);
+        }
+        .cover-btn:hover { border-color: rgba(94,92,224,0.4); }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+        .modal-actions button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(4px);
+        }
+        .btn-save {
+            background: rgba(94,92,224,0.3);
+            color: #fff;
+            border: 1px solid rgba(94,92,224,0.3);
+            box-shadow: 0 4px 20px rgba(94,92,224,0.15);
+        }
+        .btn-save:hover {
+            background: rgba(94,92,224,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(94,92,224,0.25);
+        }
+        .btn-cancel {
+            background: rgba(40,40,40,0.4);
+            color: #aaa;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .btn-cancel:hover { background: rgba(60,60,60,0.6); color: #ddd; }
+        @media (max-width: 480px) {
+            .workspace { padding: 0; }
+            .phone-container { max-width: 100%; max-height: 100%; border-radius: 0; border: none; box-shadow: none; }
+            .screen-glass { display: none; }
+            .nav-bar { padding: 12px 6px; gap: 4px; }
+            .btn-socket { min-width: 40px; padding: 4px 2px; }
+            .pwa-btn { font-size: 7px; padding: 8px 2px; }
+            .modal-box { padding: 20px 16px 24px; border-radius: 20px; }
+            .modal-field .field-row { flex-wrap: wrap; }
+            .modal-field .field-row label { min-width: 30px; font-size: 9px; }
+            .add-section .add-row input { min-width: 80px; font-size: 12px; }
+            .modal-actions button { padding: 8px 16px; font-size: 12px; }
+            .modal-header h2 { font-size: 16px; }
+        }
+    </style>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4b6cb7">
+    <link rel="apple-touch-icon" href="icon.png">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4b6cb7">
+<link rel="apple-touch-icon" href="icon.png"></head>
+<body>
+    <nav id="nav-bar" class="nav-bar">
+        <div id="socket-power" class="btn-socket power-socket">
+            <div class="led"></div>
+            <button id="btn-power" class="pwa-btn power-btn">OFF</button>
+        </div>
+    </nav>
+    <main class="workspace">
+        <div id="smartphone" class="phone-container">
+            <div class="screen-glass"></div>
+            <div class="power-overlay" id="power-overlay"></div>
+            <div id="content-area" class="content-area"></div>
+        </div>
+    </main>
+    <div id="link-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>⚡ CONFIGURER</h2>
+                <button class="modal-close" id="modal-close-btn">✕</button>
+            </div>
+            <div id="modal-fields-container"></div>
+            <div class="add-section">
+                <div class="add-row">
+                    <input type="text" id="add-name" placeholder="Nom" />
+                    <input type="url" id="add-url" placeholder="https://..." />
+                </div>
+                <button class="add-btn" id="add-btn">➕ Ajouter</button>
+                <button class="cover-btn" id="cover-btn">Cover: OFF</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="modal-cancel-btn">Annuler</button>
+                <button class="btn-save" id="modal-save-btn">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Application lancée');
+
+            const STORAGE_KEY = 'pwaList';
+            const COVER_KEY = 'coverEnabled';
+            let pwaList = [];
+            let coverEnabled = false;
+            let activePwaId = null;
+            let isPoweredOn = false;
+            const ledColors = ['#ff453a', '#5e5ce0', '#0a84ff', '#ff375f', '#32d74b', '#ffd60a', '#bf5af2', '#ff9f0a'];
+
+            function loadData() {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                pwaList = stored ? JSON.parse(stored) : [
+                    { id: 'id-1', name: 'Master', url: 'https://mekeirish.github.io/Mastercode/' },
+                    { id: 'id-2', name: 'Rea', url: 'https://mekeirish.github.io/Reaactorturbo/' },
+                    { id: 'id-3', name: 'Brain', url: 'https://mekeirish.github.io/Braincode/' },
+                    { id: 'id-4', name: 'Sniper', url: 'https://mekeirish.github.io/Snipercode/' },
+                    { id: 'id-5', name: 'Lab', url: 'https://mekeirish.github.io/Labcode/' },
+                    { id: 'id-6', name: 'Hub', url: 'https://mekeirish.github.io/Hubcode/' },
+                    { id: 'id-7', name: 'Ibra', url: 'https://mekeirish.github.io/Ibracode/' },
+                    { id: 'id-8', name: 'Logo', url: 'https://mekeirish.github.io/Logomaker/' }
+                ];
+                saveData();
+                coverEnabled = localStorage.getItem(COVER_KEY) === 'true';
+                console.log('📦 Données chargées, nombre de PWA :', pwaList.length);
+            }
+            function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(pwaList)); }
+            function saveCoverState() { localStorage.setItem(COVER_KEY, String(coverEnabled)); }
+
+            // ===== RENDU UI =====
+            function renderNav() {
+                const nav = document.getElementById('nav-bar');
+                if (!nav) return;
+                let powerSocket = document.getElementById('socket-power');
+                if (!powerSocket) {
+                    powerSocket = document.createElement('div');
+                    powerSocket.id = 'socket-power';
+                    powerSocket.className = 'btn-socket power-socket';
+                    powerSocket.innerHTML = `<div class="led"></div><button id="btn-power" class="pwa-btn power-btn">OFF</button>`;
+                    nav.prepend(powerSocket);
+                }
+                const children = Array.from(nav.children);
+                children.forEach(child => {
+                    if (child.id !== 'socket-power') child.remove();
+                });
+                pwaList.forEach((item, index) => {
+                    const socket = document.createElement('div');
+                    socket.className = 'btn-socket';
+                    socket.id = `socket-${item.id}`;
+                    const led = document.createElement('div');
+                    led.className = 'led';
+                    led.style.backgroundColor = '#222';
+                    led.dataset.color = ledColors[index % ledColors.length];
+                    const btn = document.createElement('button');
+                    btn.className = 'pwa-btn';
+                    btn.id = `btn-${item.id}`;
+                    btn.textContent = item.name;
+                    btn.addEventListener('click', () => switchTab(item.id));
+                    socket.appendChild(led);
+                    socket.appendChild(btn);
+                    nav.appendChild(socket);
+                });
+                console.log('✅ Navbar rendue avec', pwaList.length, 'boutons');
+            }
+
+            function renderIframes() {
+                const container = document.getElementById('content-area');
+                if (!container) return;
+                container.innerHTML = '';
+                pwaList.forEach(item => {
+                    const iframe = document.createElement('iframe');
+                    iframe.id = `iframe-${item.id}`;
+                    iframe.dataset.src = item.url;
+                    iframe.allow = 'geolocation; microphone; camera; clipboard-write; clipboard-read';
+                    iframe.addEventListener('error', function() {
+                        console.error(`❌ Erreur de chargement de l'iframe ${item.id} : ${item.url}`);
+                    });
+                    container.appendChild(iframe);
+                });
+                console.log('🖼️ Iframes rendues :', pwaList.length);
+            }
+
+            function updateActiveState() {
+                document.querySelectorAll('.pwa-btn:not(#btn-power)').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.btn-socket:not(#socket-power)').forEach(s => s.classList.remove('active-pwa'));
+                document.querySelectorAll('.content-area iframe').forEach(f => f.classList.remove('active'));
+
+                if (activePwaId && isPoweredOn) {
+                    const btn = document.getElementById(`btn-${activePwaId}`);
+                    if (btn) btn.classList.add('active');
+                    const socket = document.getElementById(`socket-${activePwaId}`);
+                    if (socket) socket.classList.add('active-pwa');
+                    const iframe = document.getElementById(`iframe-${activePwaId}`);
+                    if (iframe) {
+                        iframe.classList.add('active');
+                        loadIframe(activePwaId);
+                    }
+                }
+                console.log('🔄 État actif mis à jour :', activePwaId || 'AUCUN', isPoweredOn ? 'ON' : 'OFF');
+            }
+
+            function loadIframe(id) {
+                const iframe = document.getElementById(`iframe-${id}`);
+                if (!iframe) {
+                    console.error(`❌ Iframe ${id} introuvable`);
+                    return;
+                }
+                const src = iframe.dataset.src;
+                if (!src) {
+                    console.error(`❌ data-src manquant pour ${id}`);
+                    return;
+                }
+                const separator = src.includes('?') ? '&' : '?';
+                const cacheBuster = `${separator}_t=${Date.now()}`;
+                iframe.src = src + cacheBuster;
+                console.log(`📄 Iframe ${id} chargé : ${src} (cache-buster)`);
+            }
+
+            function renderAll() {
+                renderNav();
+                renderIframes();
+                updateActiveState();
+                updateCoverUI();
+                console.log('🎨 Rendu complet');
+            }
+
+            // ===== COVER =====
+            function updateCoverUI() {
+                const overlay = document.getElementById('power-overlay');
+                const coverBtn = document.getElementById('cover-btn');
+                const show = coverEnabled && !isPoweredOn;
+                if (overlay) overlay.classList.toggle('cover-image', show);
+                if (coverBtn) {
+                    coverBtn.textContent = coverEnabled ? 'Cover: ON' : 'Cover: OFF';
+                    coverBtn.classList.toggle('active', coverEnabled);
+                }
+            }
+            function toggleCover() {
+                coverEnabled = !coverEnabled;
+                saveCoverState();
+                updateCoverUI();
+                console.log('🖼️ Cover toggled :', coverEnabled ? 'ON' : 'OFF');
+            }
+
+            // ===== SWITCH TAB =====
+            function switchTab(id) {
+                if (!isPoweredOn) {
+                    console.warn('⛔ Appareil éteint, impossible de changer d’onglet');
+                    return;
+                }
+                if (activePwaId === id) return;
+                playIndustrialHum();
+                activePwaId = id;
+                updateActiveState();
+                console.log(`🔀 Commutation vers : ${id}`);
+            }
+
+            // ===== MODALE =====
+            const modalOverlay = document.getElementById('link-modal');
+            const modalFields = document.getElementById('modal-fields-container');
+            const closeModalBtn = document.getElementById('modal-close-btn');
+            const cancelModalBtn = document.getElementById('modal-cancel-btn');
+            const saveModalBtn = document.getElementById('modal-save-btn');
+            const addName = document.getElementById('add-name');
+            const addUrl = document.getElementById('add-url');
+            const addBtn = document.getElementById('add-btn');
+            const coverBtn = document.getElementById('cover-btn');
+
+            function populateModal() {
+                if (!modalFields) return;
+                modalFields.innerHTML = '';
+                pwaList.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'modal-field';
+                    div.dataset.id = item.id;
+                    const nameRow = document.createElement('div');
+                    nameRow.className = 'field-row';
+                    const nameLabel = document.createElement('label');
+                    nameLabel.textContent = 'Nom';
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.value = item.name;
+                    nameInput.id = `modal-name-${item.id}`;
+                    nameRow.appendChild(nameLabel);
+                    nameRow.appendChild(nameInput);
+                    div.appendChild(nameRow);
+                    const urlRow = document.createElement('div');
+                    urlRow.className = 'field-row';
+                    const urlLabel = document.createElement('label');
+                    urlLabel.textContent = 'Lien';
+                    const urlInput = document.createElement('input');
+                    urlInput.type = 'url';
+                    urlInput.value = item.url;
+                    urlInput.id = `modal-url-${item.id}`;
+                    urlRow.appendChild(urlLabel);
+                    urlRow.appendChild(urlInput);
+                    div.appendChild(urlRow);
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'delete-btn';
+                    delBtn.textContent = '🗑 Supprimer';
+                    delBtn.dataset.id = item.id;
+                    delBtn.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const id = e.currentTarget.dataset.id;
+                        if (confirm(`Supprimer "${pwaList.find(i => i.id === id)?.name}" ?`)) {
+                            pwaList = pwaList.filter(i => i.id !== id);
+                            if (activePwaId === id) activePwaId = null;
+                            saveData();
+                            populateModal();
+                            renderAll();
+                        }
+                    });
+                    div.appendChild(delBtn);
+                    modalFields.appendChild(div);
+                });
+                updateCoverUI();
+                if (coverBtn) {
+                    coverBtn.textContent = coverEnabled ? 'Cover: ON' : 'Cover: OFF';
+                    coverBtn.classList.toggle('active', coverEnabled);
+                }
+            }
+
+            function openModal() {
+                populateModal();
+                if (modalOverlay) modalOverlay.classList.add('open');
+                console.log('📂 Modale ouverte');
+            }
+            function closeModal() {
+                if (modalOverlay) modalOverlay.classList.remove('open');
+                console.log('📂 Modale fermée');
+            }
+
+            function saveModalChanges() {
+                pwaList.forEach(item => {
+                    const nameInput = document.getElementById(`modal-name-${item.id}`);
+                    const urlInput = document.getElementById(`modal-url-${item.id}`);
+                    if (nameInput) item.name = nameInput.value.trim() || item.name;
+                    if (urlInput) item.url = urlInput.value.trim() || item.url;
+                });
+                saveData();
+                renderAll();
+                if (activePwaId) {
+                    const iframe = document.getElementById(`iframe-${activePwaId}`);
+                    const newUrl = pwaList.find(i => i.id === activePwaId)?.url;
+                    if (iframe && newUrl && newUrl !== iframe.dataset.src) {
+                        iframe.dataset.src = newUrl;
+                        if (isPoweredOn) loadIframe(activePwaId);
+                    }
+                }
+                closeModal();
+                console.log('💾 Modifications sauvegardées');
+            }
+
+            function addItem() {
+                if (!addName || !addUrl) return;
+                const name = addName.value.trim();
+                const url = addUrl.value.trim();
+                if (!name || !url) { alert('Veuillez remplir le nom et l\'URL.'); return; }
+                const newId = 'id-' + Date.now();
+                pwaList.push({ id: newId, name, url });
+                saveData();
+                addName.value = '';
+                addUrl.value = '';
+                populateModal();
+                renderAll();
+                if (isPoweredOn) switchTab(newId);
+                console.log(`➕ PWA ajoutée : ${name} -> ${url}`);
+            }
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+            if (saveModalBtn) saveModalBtn.addEventListener('click', saveModalChanges);
+            if (modalOverlay) modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+            if (addBtn) addBtn.addEventListener('click', addItem);
+            if (coverBtn) coverBtn.addEventListener('click', toggleCover);
+            if (addUrl) addUrl.addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
+            if (addName) addName.addEventListener('keydown', e => { if (e.key === 'Enter') addUrl.focus(); });
+
+            // ===== POWER =====
+            const powerBtn = document.getElementById('btn-power');
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            function playIndustrialHum() {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            }
+
+            function togglePower() {
+                playIndustrialHum();
+                isPoweredOn = !isPoweredOn;
+                const socketPower = document.getElementById('socket-power');
+                const smartphone = document.getElementById('smartphone');
+                const overlay = document.getElementById('power-overlay');
+
+                if (isPoweredOn) {
+                    if (powerBtn) { powerBtn.textContent = 'ON'; powerBtn.classList.add('active'); }
+                    if (socketPower) socketPower.classList.add('active-power');
+                    if (smartphone) smartphone.classList.add('hub-powered-on');
+                    if (overlay) overlay.classList.remove('cover-image');
+                    // Forcer le chargement de la première PWA si aucune n'est active
+                    if (!activePwaId && pwaList.length) {
+                        activePwaId = pwaList[0].id;
+                        updateActiveState();
+                    } else if (activePwaId) {
+                        updateActiveState();
+                    }
+                } else {
+                    if (powerBtn) { powerBtn.textContent = 'OFF'; powerBtn.classList.remove('active'); }
+                    if (socketPower) socketPower.classList.remove('active-power');
+                    if (smartphone) smartphone.classList.remove('hub-powered-on');
+                    if (overlay) overlay.classList.toggle('cover-image', coverEnabled);
+                    activePwaId = null;
+                    updateActiveState();
+                }
+                console.log(`🔌 Power ${isPoweredOn ? 'ON' : 'OFF'}`);
+            }
+
+            // Long press
+            let pressTimer = null;
+            let isLongPress = false;
+            const startPress = (e) => {
+                isLongPress = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    e.preventDefault();
+                    openModal();
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }, 600);
+            };
+            const clearPress = () => {
+                if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+            };
+            if (powerBtn) {
+                powerBtn.addEventListener('mousedown', startPress);
+                powerBtn.addEventListener('mouseup', clearPress);
+                powerBtn.addEventListener('mouseleave', clearPress);
+                powerBtn.addEventListener('touchstart', startPress, { passive: false });
+                powerBtn.addEventListener('touchend', clearPress);
+                powerBtn.addEventListener('touchcancel', clearPress);
+                powerBtn.addEventListener('click', e => {
+                    if (isLongPress) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        isLongPress = false;
+                        return;
+                    }
+                    togglePower();
+                });
+            }
+
+            // ===== POSTMESSAGE =====
+            window.addEventListener('message', (event) => {
+                const msg = event.data;
+                if (msg?.type === 'HUB_ROUTER' && msg.target) {
+                    const iframe = document.getElementById(`iframe-${msg.target}`);
+                    if (iframe) {
+                        if (!iframe.src || iframe.src === window.location.href) {
+                            iframe.src = iframe.dataset.src;
+                            iframe.onload = () => iframe.contentWindow.postMessage(msg.payload, '*');
+                        } else {
+                            iframe.contentWindow.postMessage(msg.payload, '*');
+                        }
+                    }
+                }
+            });
+
+            // ===== SERVICE WORKER =====
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    regs.forEach(r => r.unregister());
+                    console.log('🧹 Service Workers désactivés');
+                });
+            }
+
+            // ===== INIT =====
+            loadData();
+            renderAll();
+            isPoweredOn = false;
+            if (powerBtn) { powerBtn.textContent = 'OFF'; powerBtn.classList.remove('active'); }
+            const socketPower = document.getElementById('socket-power');
+            if (socketPower) socketPower.classList.remove('active-power');
+            const smartphone = document.getElementById('smartphone');
+            if (smartphone) smartphone.classList.remove('hub-powered-on');
+            updateCoverUI();
+            console.log('✅ Initialisation terminée - Appuyez sur PWR pour allumer');
+        });
+    </script>
+
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}</script>
+</body>
+</html>
