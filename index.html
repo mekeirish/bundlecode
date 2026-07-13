@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>BUNDLECODE // PC</title>
 
     <!-- ===== TAILWIND VIA CDN ===== -->
@@ -612,6 +612,104 @@
             color: #ddd;
         }
 
+        /* ===== BOUTON D'INSTALLATION FLOTTANT ===== */
+        #install-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: rgba(16, 18, 32, 0.95);
+            backdrop-filter: blur(18px) saturate(1.4);
+            -webkit-backdrop-filter: blur(18px) saturate(1.4);
+            border-radius: 16px;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1);
+        }
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        #install-banner .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 150px;
+        }
+        #install-banner .banner-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+        #install-banner .banner-text {
+            display: flex;
+            flex-direction: column;
+        }
+        #install-banner .banner-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+        #install-banner .banner-sub {
+            font-size: 12px;
+            color: #94a0b8;
+            margin-top: 2px;
+        }
+        #install-banner .banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        #install-btn {
+            background: linear-gradient(135deg, #5e5ce0, #7a78ff);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 16px rgba(94, 92, 224, 0.3);
+            white-space: nowrap;
+        }
+        #install-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 24px rgba(94, 92, 224, 0.4);
+        }
+        #install-btn:active {
+            transform: scale(0.95);
+        }
+        #install-close-btn {
+            background: transparent;
+            border: none;
+            color: #6a7a8e;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        #install-close-btn:hover {
+            color: #fff;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .workspace {
@@ -644,6 +742,26 @@
             }
             .btn-copy {
                 padding: 6px 10px;
+            }
+            #install-banner {
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+                padding: 12px 14px;
+                border-radius: 14px;
+            }
+            #install-banner .banner-title {
+                font-size: 13px;
+            }
+            #install-banner .banner-sub {
+                font-size: 11px;
+            }
+            #install-btn {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+            #install-banner .banner-icon {
+                font-size: 22px;
             }
         }
         @media (min-width: 769px) and (max-width: 1200px) {
@@ -721,6 +839,21 @@
                 <button class="btn-cancel" id="modal-cancel-btn">Annuler</button>
                 <button class="btn-save" id="modal-save-btn">Sauvegarder</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== BOUTON D'INSTALLATION FLOTTANT ===== -->
+    <div id="install-banner">
+        <div class="banner-content">
+            <span class="banner-icon">📲</span>
+            <div class="banner-text">
+                <span class="banner-title">Installer l'application</span>
+                <span class="banner-sub">Ajoutez sur l'écran d'accueil</span>
+            </div>
+        </div>
+        <div class="banner-actions">
+            <button id="install-btn">Installer</button>
+            <button id="install-close-btn" aria-label="Fermer">✕</button>
         </div>
     </div>
 
@@ -821,6 +954,7 @@
         const STORAGE_KEY = 'pwaList_pc';
         const COVER_KEY = 'coverEnabled_pc';
         const VISIBLE_KEY = 'visiblePwas_pc';
+        const INSTALL_BANNER_DISMISSED_KEY = 'installBannerDismissed_pc';
         let pwaList = [];
         let coverEnabled = false;
         let isPoweredOn = false;
@@ -829,28 +963,101 @@
         let pressStart = 0;
 
         // ================================================================
-        //  CHARGEMENT DES DONNÉES (priorité à window.__initialData)
+        //  INSTALLATION PWA
+        // ================================================================
+        let deferredPrompt = null;
+        let installBannerShown = false;
+
+        const installBanner = document.getElementById('install-banner');
+        const installBtn = document.getElementById('install-btn');
+        const installCloseBtn = document.getElementById('install-close-btn');
+
+        function showInstallBanner() {
+            if (installBannerShown) return;
+            const dismissed = localStorage.getItem(INSTALL_BANNER_DISMISSED_KEY) === 'true';
+            if (dismissed) return;
+            installBanner.style.display = 'flex';
+            installBannerShown = true;
+        }
+
+        function hideInstallBanner() {
+            installBanner.style.display = 'none';
+            installBannerShown = false;
+        }
+
+        function dismissInstallBanner() {
+            localStorage.setItem(INSTALL_BANNER_DISMISSED_KEY, 'true');
+            hideInstallBanner();
+        }
+
+        // Écouter l'événement beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallBanner();
+        });
+
+        // Gérer l'installation
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                // Fallback : afficher un message pour les navigateurs qui ne supportent pas l'API
+                alert('L\'installation n\'est pas disponible dans ce navigateur.\nUtilisez "Ajouter à l\'écran d\'accueil" depuis le menu du navigateur.');
+                return;
+            }
+            try {
+                const result = await deferredPrompt.prompt();
+                if (result.outcome === 'accepted') {
+                    playClickSound(1000, 0.08, 0.15);
+                    dismissInstallBanner();
+                } else {
+                    playClickSound(400, 0.05, 0.08);
+                }
+                deferredPrompt = null;
+            } catch (err) {
+                console.warn('Installation error:', err);
+                dismissInstallBanner();
+            }
+        });
+
+        // Fermeture manuelle
+        installCloseBtn.addEventListener('click', () => {
+            dismissInstallBanner();
+            playClickSound(500, 0.04, 0.08);
+        });
+
+        // Si l'application a été installée, cacher le banner
+        window.addEventListener('appinstalled', () => {
+            dismissInstallBanner();
+            deferredPrompt = null;
+        });
+
+        // Vérifier si le banner doit être affiché après un délai (si l'événement n'est pas déclenché)
+        // Pour les navigateurs qui ne supportent pas beforeinstallprompt, on peut proposer une alternative
+        // mais on ne l'affiche pas automatiquement pour éviter de gêner.
+        // On attend 3 secondes, si aucun événement n'a eu lieu, on cache définitivement.
+        setTimeout(() => {
+            if (!installBannerShown) {
+                // Ne rien faire, le banner reste caché
+            }
+        }, 3000);
+
+        // ================================================================
+        //  CHARGEMENT DES DONNÉES
         // ================================================================
         function loadData() {
-            // Si on a des données injectées (snapshot), on les utilise
             if (window.__initialData) {
                 const d = window.__initialData;
                 pwaList = d.pwaList || [];
                 coverEnabled = d.coverEnabled || false;
                 visiblePwas = d.visiblePwas || [];
                 isPoweredOn = d.isPoweredOn || false;
-                // On ne sauvegarde pas dans localStorage pour ne pas écraser
-                // mais on peut tout de même stocker pour les modifications futures
-                // On va quand même sauvegarder pour que les changements persistent
                 saveData();
                 saveVisible();
                 saveCoverState();
-                // On supprime __initialData pour ne pas réutiliser (sinon à chaque loadData on réinitialise)
                 delete window.__initialData;
                 return;
             }
 
-            // Sinon, chargement normal depuis localStorage
             const stored = localStorage.getItem(STORAGE_KEY);
             pwaList = stored ? JSON.parse(stored) : [
                 { id: 'pwa-1', name: 'Reactor', url: 'https://mekeirish.github.io/Reactor4/' },
@@ -882,7 +1089,7 @@
         }
 
         // ================================================================
-        //  COPIER LE CODE HTML AVEC L'ÉTAT ACTUEL (barre cachée)
+        //  COPIER LE CODE HTML
         // ================================================================
         function copyCurrentCode() {
             const initialData = {
@@ -892,12 +1099,9 @@
                 isPoweredOn: isPoweredOn
             };
             const script = `<script>window.__initialData = ${JSON.stringify(initialData)};<\/script>`;
-            // Style pour masquer la barre de navigation
             const hideNavStyle = `<style>.nav-bar { display: none !important; }</style>`;
             let html = document.documentElement.outerHTML;
-            // Injecter le style dans le head avant </head>
             html = html.replace('</head>', `${hideNavStyle}</head>`);
-            // Injecter le script après body
             html = html.replace(/<body[^>]*>/i, (match) => `${match}${script}`);
             navigator.clipboard.writeText(html).then(() => {
                 playClickSound(1000, 0.06, 0.15);
@@ -908,7 +1112,7 @@
         }
 
         // ================================================================
-        //  DRAG & DROP – Réorganisation
+        //  DRAG & DROP
         // ================================================================
         let dragSourceId = null;
 
@@ -1303,7 +1507,6 @@
         // ================================================================
         loadData();
 
-        // Si aucune PWA visible mais que le power est on, on allume
         if (visiblePwas.length > 0) {
             isPoweredOn = true;
             document.getElementById('socket-power').classList.add('power-on');
