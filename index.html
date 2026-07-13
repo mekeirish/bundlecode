@@ -1,38 +1,83 @@
-<html lang="fr"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>HUB // TAILWIND CYBER</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BUNDLECODE // PC</title>
+
+    <!-- ===== TAILWIND VIA CDN ===== -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ===== RESET & BASE ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: radial-gradient(circle at 20% 30%, #0b0e1a, #060810);
             color: #e2e8f0;
-            display: flex;
-            flex-direction: column;
             height: 100vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
         }
 
-        /* ===== BARRE DE NAVIGATION ===== */
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== NAV BAR ===== */
         .nav-bar {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 14px 20px;
-            background: rgba(16, 18, 32, 0.6);
-            backdrop-filter: blur(16px) saturate(1.4);
-            -webkit-backdrop-filter: blur(16px) saturate(1.4);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            padding: 10px 24px;
+            background: rgba(16, 18, 32, 0.7);
+            backdrop-filter: blur(18px) saturate(1.4);
+            -webkit-backdrop-filter: blur(18px) saturate(1.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             flex-shrink: 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.1) transparent;
+            scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+            flex-wrap: nowrap;
         }
-        .nav-bar::-webkit-scrollbar { height: 4px; }
-        .nav-bar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+        .nav-bar::-webkit-scrollbar {
+            height: 3px;
+        }
+        .nav-bar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+        }
+
+        .nav-spacer {
+            flex: 1;
+            min-width: 16px;
+        }
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
 
         /* ===== BOUTONS SOCKET ===== */
         .btn-socket {
@@ -40,29 +85,41 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            padding: 8px 14px;
-            min-width: 60px;
+            gap: 3px;
+            padding: 6px 16px;
+            min-width: 56px;
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 10px; /* Moins arrondi */
-            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            cursor: grab;
             transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             position: relative;
+            flex-shrink: 0;
         }
-
+        .btn-socket:active {
+            cursor: grabbing;
+        }
+        .btn-socket.dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+        .btn-socket.drag-over {
+            border-color: rgba(94, 92, 224, 0.6);
+            background: rgba(94, 92, 224, 0.08);
+            box-shadow: 0 0 20px rgba(94, 92, 224, 0.1);
+        }
         .btn-socket::after {
             content: '';
             position: absolute;
             inset: -1px;
             border-radius: 10px;
             padding: 1px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 60%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 60%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
@@ -71,32 +128,37 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-        .btn-socket:hover::after { opacity: 1; }
-
-        .btn-socket:active { transform: scale(0.96); }
+        .btn-socket:hover::after {
+            opacity: 1;
+        }
+        .btn-socket:active {
+            transform: scale(0.95);
+        }
         .btn-socket:hover {
             background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.14);
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* État actif PWA */
+        /* État actif (PWA visible) */
         .btn-socket.active {
-            background: rgba(94, 92, 224, 0.12);
+            background: rgba(94, 92, 224, 0.14);
             border-color: rgba(94, 92, 224, 0.5);
-            box-shadow: 0 0 20px rgba(94, 92, 224, 0.08), inset 0 0 20px rgba(94, 92, 224, 0.04);
+            box-shadow: 0 0 24px rgba(94, 92, 224, 0.08), inset 0 0 24px rgba(94, 92, 224, 0.04);
             transform: translateY(-1px);
         }
-        .btn-socket.active .pwa-btn { color: #fff; }
+        .btn-socket.active .pwa-btn {
+            color: #fff;
+        }
         .btn-socket.active .led {
             background: #5e5ce0;
             box-shadow: 0 0 14px #5e5ce0;
         }
 
-        /* État Power ON */
+        /* Power ON */
         .btn-socket.power-on {
-            background: rgba(255, 60, 60, 0.1);
+            background: rgba(255, 60, 60, 0.10);
             border-color: rgba(255, 60, 60, 0.35);
             box-shadow: 0 0 20px rgba(255, 60, 60, 0.06);
         }
@@ -104,9 +166,10 @@
             background: #ff3b30;
             box-shadow: 0 0 14px #ff3b30;
         }
-        .btn-socket.power-on .pwa-btn { color: #ff8a8a; }
+        .btn-socket.power-on .pwa-btn {
+            color: #ff8a8a;
+        }
 
-        /* ===== LED ===== */
         .led {
             width: 7px;
             height: 7px;
@@ -114,10 +177,8 @@
             background: #3c465a;
             transition: all 0.3s;
             flex-shrink: 0;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
         }
-
-        /* ===== BOUTON PWA ===== */
         .pwa-btn {
             background: none;
             border: none;
@@ -133,11 +194,12 @@
             white-space: nowrap;
         }
 
-        /* ===== BOUTON POWER SPÉCIFIQUE ===== */
+        /* ===== POWER SPECIFIC ===== */
         #socket-power {
             touch-action: none;
             background: rgba(255, 60, 60, 0.04);
             border-color: rgba(255, 60, 60, 0.08);
+            cursor: pointer;
         }
         #socket-power .pwa-btn {
             font-size: 9px;
@@ -148,94 +210,215 @@
             background: rgba(255, 60, 60, 0.12);
             border-color: rgba(255, 60, 60, 0.35);
         }
-        #socket-power.power-on .pwa-btn { color: #ffb0b0; }
+        #socket-power.power-on .pwa-btn {
+            color: #ffb0b0;
+        }
 
-        /* ===== WORKSPACE ET PHONE ===== */
+        /* ===== BOUTON CONFIG ===== */
+        .btn-config,
+        .btn-copy {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #94a0b8;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            gap: 4px;
+        }
+        .btn-config:hover,
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.14);
+            color: #fff;
+        }
+        .btn-config svg,
+        .btn-copy svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ===== WORKSPACE ===== */
         .workspace {
             flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            background: radial-gradient(ellipse at 30% 40%, rgba(40, 60, 120, 0.15), transparent 70%);
-        }
-        .phone-container {
-            width: 100%;
-            max-width: 400px;
-            height: 100%;
-            max-height: 750px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px) saturate(1.6);
-            -webkit-backdrop-filter: blur(20px) saturate(1.6);
-            border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.03);
-            position: relative;
-            overflow: hidden;
+            padding: 12px 24px 12px 24px;
+            overflow: auto;
+            background: radial-gradient(ellipse at 30% 40%, rgba(40, 60, 120, 0.08), transparent 70%);
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
-        .content-area {
-            flex: 1;
+        /* ===== GRILLE DES PWA ===== */
+        .pwa-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 18px;
             width: 100%;
             height: 100%;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: none;
-            background: #0a0a18;
-        }
-        iframe.active {
-            display: block;
+            grid-auto-rows: 1fr;
+            align-content: stretch;
         }
 
-        #power-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            z-index: 10;
+        .pwa-grid.empty {
             display: flex;
             justify-content: center;
             align-items: center;
             color: #3c465a;
-            font-size: 13px;
-            letter-spacing: 3px;
+            font-size: 14px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            background-size: cover;
-            background-position: center;
-            transition: opacity 0.4s;
         }
-        #power-overlay.hidden { display: none !important; }
-        #power-overlay.cover {
-            background-image: url('cover.png');
-            filter: grayscale(100%) opacity(0.2);
+        .pwa-grid.empty .empty-msg {
+            padding: 32px 48px;
+            border: 1px dashed rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        /* ===== CARTE PWA ===== */
+        .pwa-card {
+            background: rgba(8, 10, 22, 0.7);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 300px;
+            transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+            animation: cardIn 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+        }
+        .pwa-card.hidden-card {
+            display: none;
+        }
+        .pwa-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        @keyframes cardIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96) translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .pwa-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            flex-shrink: 0;
+            min-height: 38px;
+        }
+        .pwa-card-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #b8b8ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pwa-card-title .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #5e5ce0;
+            box-shadow: 0 0 10px #5e5ce0;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .pwa-card-close {
+            background: rgba(255, 255, 255, 0.03);
+            border: none;
+            border-radius: 6px;
+            color: #6a7a8e;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 2px 8px;
+            transition: 0.2s;
+        }
+        .pwa-card-close:hover {
+            background: rgba(255, 60, 60, 0.15);
+            color: #ff6b6b;
+        }
+
+        .pwa-card-body {
+            flex: 1;
+            position: relative;
+            background: #060810;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .pwa-card-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #060810;
+            display: block;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            overflow: auto;
+        }
+        .pwa-card-body iframe::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
         }
 
         /* ===== MODALE ===== */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
             padding: 20px;
         }
-        .modal.open { display: flex; }
+        .modal.open {
+            display: flex;
+        }
         .modal-content {
-            background: rgba(16, 18, 32, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(16, 18, 32, 0.9);
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
             border-radius: 20px;
-            max-width: 500px;
+            max-width: 560px;
             width: 100%;
-            padding: 24px 20px 30px;
-            border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.03);
+            padding: 24px 24px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.03);
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -244,7 +427,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             padding-bottom: 12px;
         }
         .modal-header h2 {
@@ -256,8 +439,8 @@
             background-clip: text;
         }
         .modal-close {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 50%;
             width: 36px;
             height: 36px;
@@ -269,13 +452,17 @@
             align-items: center;
             justify-content: center;
         }
-        .modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+        }
+
         .modal-field {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             padding: 12px;
             border-radius: 10px;
             margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .field-row {
             display: flex;
@@ -293,14 +480,17 @@
         .field-row input {
             flex: 1;
             padding: 6px 10px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 6px;
             color: #e0e0e0;
             font-size: 13px;
             font-family: 'Courier New', monospace;
         }
-        .field-row input:focus { border-color: #5e5ce0; outline: none; }
+        .field-row input:focus {
+            border-color: #5e5ce0;
+            outline: none;
+        }
         .btn-group {
             display: flex;
             gap: 8px;
@@ -316,13 +506,24 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .delete-btn { background: rgba(40,10,10,0.6); color: #ff6b6b; }
-        .delete-btn:hover { background: rgba(60,20,20,0.8); }
-        .open-btn { background: rgba(40,40,80,0.4); color: #b8b8ff; }
-        .open-btn:hover { background: rgba(60,60,120,0.5); }
+        .delete-btn {
+            background: rgba(40, 10, 10, 0.6);
+            color: #ff6b6b;
+        }
+        .delete-btn:hover {
+            background: rgba(60, 20, 20, 0.8);
+        }
+        .open-btn {
+            background: rgba(40, 40, 80, 0.4);
+            color: #b8b8ff;
+        }
+        .open-btn:hover {
+            background: rgba(60, 60, 120, 0.5);
+        }
+
         .add-section {
             margin-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 16px;
             display: flex;
             flex-direction: column;
@@ -336,20 +537,24 @@
         .add-row input {
             flex: 1;
             padding: 6px 10px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 6px;
             color: #e0e0e0;
             font-size: 13px;
             font-family: 'Courier New', monospace;
             min-width: 100px;
         }
-        .add-row input:focus { border-color: #5e5ce0; outline: none; }
-        .add-btn, .cover-btn {
+        .add-row input:focus {
+            border-color: #5e5ce0;
+            outline: none;
+        }
+        .add-btn,
+        .cover-btn {
             padding: 6px 16px;
-            background: rgba(40,40,80,0.4);
+            background: rgba(40, 40, 80, 0.4);
             color: #b8b8ff;
-            border: 1px solid rgba(94,92,224,0.2);
+            border: 1px solid rgba(94, 92, 224, 0.2);
             border-radius: 6px;
             font-weight: 700;
             cursor: pointer;
@@ -358,9 +563,20 @@
             font-size: 12px;
             align-self: flex-end;
         }
-        .add-btn:hover, .cover-btn:hover { background: rgba(60,60,120,0.5); }
-        .cover-btn { width: 100%; text-align: center; }
-        .cover-btn.active { background: rgba(60,60,140,0.4); border-color: #5e5ce0; color: #fff; }
+        .add-btn:hover,
+        .cover-btn:hover {
+            background: rgba(60, 60, 120, 0.5);
+        }
+        .cover-btn {
+            width: 100%;
+            text-align: center;
+        }
+        .cover-btn.active {
+            background: rgba(60, 60, 140, 0.4);
+            border-color: #5e5ce0;
+            color: #fff;
+        }
+
         .modal-actions {
             display: flex;
             gap: 12px;
@@ -377,46 +593,115 @@
             transition: 0.2s;
             text-transform: uppercase;
         }
-        .btn-save { background: rgba(94,92,224,0.3); color: #fff; border: 1px solid rgba(94,92,224,0.3); }
-        .btn-save:hover { background: rgba(94,92,224,0.5); transform: translateY(-2px); }
-        .btn-cancel { background: rgba(40,40,40,0.4); color: #aaa; border: 1px solid rgba(255,255,255,0.04); }
-        .btn-cancel:hover { background: rgba(60,60,60,0.6); color: #ddd; }
+        .btn-save {
+            background: rgba(94, 92, 224, 0.3);
+            color: #fff;
+            border: 1px solid rgba(94, 92, 224, 0.3);
+        }
+        .btn-save:hover {
+            background: rgba(94, 92, 224, 0.5);
+            transform: translateY(-2px);
+        }
+        .btn-cancel {
+            background: rgba(40, 40, 40, 0.4);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .btn-cancel:hover {
+            background: rgba(60, 60, 60, 0.6);
+            color: #ddd;
+        }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .workspace { padding: 0; }
-            .phone-container { max-width: 100%; max-height: 100%; border-radius: 0; border: none; }
-            .nav-bar { padding: 10px 12px; gap: 6px; }
-            .btn-socket { padding: 6px 10px; min-width: 48px; }
-            .pwa-btn { font-size: 8px; }
-            .modal-content { padding: 16px; }
+        @media (max-width: 768px) {
+            .workspace {
+                padding: 10px 12px 10px 12px;
+            }
+            .pwa-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .pwa-card {
+                min-height: 200px;
+            }
+            .nav-bar {
+                padding: 8px 12px;
+                gap: 6px;
+            }
+            .btn-socket {
+                padding: 4px 10px;
+                min-width: 44px;
+            }
+            .pwa-btn {
+                font-size: 8px;
+            }
+            .modal-content {
+                padding: 16px;
+                margin: 10px;
+            }
+            .btn-copy span {
+                display: none;
+            }
+            .btn-copy {
+                padding: 6px 10px;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .pwa-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+        @media (min-width: 1201px) {
+            .pwa-grid {
+                grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            }
         }
     </style>
 
-<link rel="manifest" href="./manifest.json">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#4b6cb7">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#4b6cb7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="icon.png" />
 </head>
 <body>
 
+    <!-- ===== NAV BAR ===== -->
     <nav class="nav-bar">
+        <!-- POWER -->
         <div id="socket-power" class="btn-socket" onpointerdown="startPress(event)" onpointerup="endPress(event)" onpointerleave="cancelPress(event)" onpointercancel="cancelPress(event)" oncontextmenu="event.preventDefault()">
             <div class="led"></div>
-            <button class="pwa-btn">PWR</button>
+            <button class="pwa-btn">POWER</button>
         </div>
-        <div id="tabs-container" style="display:flex; gap:10px;"></div>
+
+        <!-- PWA BUTTONS (drag & drop container) -->
+        <div id="tabs-container" style="display:flex; gap:8px; flex-wrap:nowrap;"></div>
+
+        <div class="nav-spacer"></div>
+
+        <div class="nav-actions">
+            <!-- BOUTON COPIER CODE -->
+            <button class="btn-copy" id="copy-code-btn" title="Copier le code HTML avec les données actuelles">
+                <svg viewBox="0 0 24 24" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                <span>Copier Code</span>
+            </button>
+
+            <!-- BOUTON CONFIG -->
+            <button class="btn-config" id="config-open-btn" title="Configurer">
+                <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Config</span>
+            </button>
+        </div>
     </nav>
 
+    <!-- ===== WORKSPACE ===== -->
     <main class="workspace">
-        <div class="phone-container">
-            <div id="power-overlay">SYSTEM OFFLINE</div>
-            <div id="content-area" class="content-area"></div>
+        <div id="pwa-grid" class="pwa-grid empty">
+            <div class="empty-msg">⏻ Allumez le système</div>
         </div>
     </main>
 
+    <!-- ===== MODALE ===== -->
     <div id="config-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -426,8 +711,8 @@
             <div id="modal-fields-container"></div>
             <div class="add-section">
                 <div class="add-row">
-                    <input type="text" id="add-name" placeholder="Nom">
-                    <input type="url" id="add-url" placeholder="https://...">
+                    <input type="text" id="add-name" placeholder="Nom" />
+                    <input type="url" id="add-url" placeholder="https://..." />
                 </div>
                 <button class="add-btn" id="add-btn">➕ Ajouter</button>
                 <button class="cover-btn" id="cover-btn">Cover: OFF</button>
@@ -441,119 +726,373 @@
 
     <script>
         // ================================================================
-        //  AUDIO (sons tactiles)
+        //  AUDIO – SON "FRAPPE SUR LE CUIR"
         // ================================================================
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+
+        function createWhiteNoiseBuffer(duration) {
+            const sampleRate = audioCtx.sampleRate;
+            const bufferSize = Math.floor(sampleRate * duration);
+            const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.6;
+            }
+            return buffer;
+        }
 
         function playClickSound(freq = 800, duration = 0.06, volume = 0.12) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+
+            const noiseBuffer = createWhiteNoiseBuffer(duration);
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = noiseBuffer;
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(volume * 1.2, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 800;
+
+            noiseSource.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseSource.start(now);
+            noiseSource.stop(now + duration);
+
             const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            osc.frequency.setValueAtTime(120, now);
+            osc.frequency.exponentialRampToValueAtTime(60, now + duration * 0.6);
+
+            const oscGain = audioCtx.createGain();
+            oscGain.gain.setValueAtTime(volume * 0.6, now);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.5);
+
+            osc.connect(oscGain);
+            oscGain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + duration * 0.6);
         }
 
         function playPowerSound() {
-            // son de mise sous/hors tension : un peu plus grave et plus long
             if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+
+            const noiseBuffer = createWhiteNoiseBuffer(0.25);
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = noiseBuffer;
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.25, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+
+            noiseSource.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseSource.start(now);
+            noiseSource.stop(now + 0.25);
+
             const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.exponentialRampToValueAtTime(400, now + 0.2);
+
+            const oscGain = audioCtx.createGain();
+            oscGain.gain.setValueAtTime(0.2, now);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+            osc.connect(oscGain);
+            oscGain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.25);
         }
 
         // ================================================================
         //  DONNÉES
         // ================================================================
-        const STORAGE_KEY = 'pwaList';
-        const COVER_KEY = 'coverEnabled';
+        const STORAGE_KEY = 'pwaList_pc';
+        const COVER_KEY = 'coverEnabled_pc';
+        const VISIBLE_KEY = 'visiblePwas_pc';
         let pwaList = [];
         let coverEnabled = false;
         let isPoweredOn = false;
-        let activePwaId = null;
+        let visiblePwas = [];
         let pressTimer = null;
         let pressStart = 0;
 
+        // ================================================================
+        //  CHARGEMENT DES DONNÉES (priorité à window.__initialData)
+        // ================================================================
         function loadData() {
+            // Si on a des données injectées (snapshot), on les utilise
+            if (window.__initialData) {
+                const d = window.__initialData;
+                pwaList = d.pwaList || [];
+                coverEnabled = d.coverEnabled || false;
+                visiblePwas = d.visiblePwas || [];
+                isPoweredOn = d.isPoweredOn || false;
+                // On ne sauvegarde pas dans localStorage pour ne pas écraser
+                // mais on peut tout de même stocker pour les modifications futures
+                // On va quand même sauvegarder pour que les changements persistent
+                saveData();
+                saveVisible();
+                saveCoverState();
+                // On supprime __initialData pour ne pas réutiliser (sinon à chaque loadData on réinitialise)
+                delete window.__initialData;
+                return;
+            }
+
+            // Sinon, chargement normal depuis localStorage
             const stored = localStorage.getItem(STORAGE_KEY);
             pwaList = stored ? JSON.parse(stored) : [
                 { id: 'pwa-1', name: 'Reactor', url: 'https://mekeirish.github.io/Reactor4/' },
                 { id: 'pwa-2', name: 'Master', url: 'https://mekeirish.github.io/Mastercode/' }
             ];
             coverEnabled = localStorage.getItem(COVER_KEY) === 'true';
+            const vis = localStorage.getItem(VISIBLE_KEY);
+            visiblePwas = vis ? JSON.parse(vis) : [];
+            const ids = new Set(pwaList.map(p => p.id));
+            visiblePwas = visiblePwas.filter(id => ids.has(id));
+            if (visiblePwas.length === 0 && pwaList.length > 0) {
+                visiblePwas = [pwaList[0].id];
+            }
             saveData();
+            saveVisible();
+            saveCoverState();
         }
-        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(pwaList)); }
-        function saveCoverState() { localStorage.setItem(COVER_KEY, String(coverEnabled)); }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(pwaList));
+        }
+
+        function saveCoverState() {
+            localStorage.setItem(COVER_KEY, String(coverEnabled));
+        }
+
+        function saveVisible() {
+            localStorage.setItem(VISIBLE_KEY, JSON.stringify(visiblePwas));
+        }
+
+        // ================================================================
+        //  COPIER LE CODE HTML AVEC L'ÉTAT ACTUEL (barre cachée)
+        // ================================================================
+        function copyCurrentCode() {
+            const initialData = {
+                pwaList: pwaList,
+                visiblePwas: visiblePwas,
+                coverEnabled: coverEnabled,
+                isPoweredOn: isPoweredOn
+            };
+            const script = `<script>window.__initialData = ${JSON.stringify(initialData)};<\/script>`;
+            // Style pour masquer la barre de navigation
+            const hideNavStyle = `<style>.nav-bar { display: none !important; }</style>`;
+            let html = document.documentElement.outerHTML;
+            // Injecter le style dans le head avant </head>
+            html = html.replace('</head>', `${hideNavStyle}</head>`);
+            // Injecter le script après body
+            html = html.replace(/<body[^>]*>/i, (match) => `${match}${script}`);
+            navigator.clipboard.writeText(html).then(() => {
+                playClickSound(1000, 0.06, 0.15);
+                alert('✅ Code HTML copié !\nCollez-le dans un fichier .html et ouvrez-le.');
+            }).catch(err => {
+                alert('❌ Erreur de copie : ' + err);
+            });
+        }
+
+        // ================================================================
+        //  DRAG & DROP – Réorganisation
+        // ================================================================
+        let dragSourceId = null;
+
+        function initDragDrop() {
+            const container = document.getElementById('tabs-container');
+            container.addEventListener('dragstart', (e) => {
+                const btn = e.target.closest('.btn-socket');
+                if (!btn || btn.id === 'socket-power') return;
+                dragSourceId = btn.dataset.id;
+                btn.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', dragSourceId);
+            });
+
+            container.addEventListener('dragend', (e) => {
+                const btn = e.target.closest('.btn-socket');
+                if (btn) btn.classList.remove('dragging');
+                document.querySelectorAll('.btn-socket.drag-over').forEach(el => el.classList.remove('drag-over'));
+            });
+
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.btn-socket');
+                if (!target || target.id === 'socket-power') return;
+                if (target.dataset.id !== dragSourceId) {
+                    target.classList.add('drag-over');
+                }
+            });
+
+            container.addEventListener('dragleave', (e) => {
+                const target = e.target.closest('.btn-socket');
+                if (target) target.classList.remove('drag-over');
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.btn-socket');
+                if (!target || target.id === 'socket-power') return;
+                const targetId = target.dataset.id;
+                if (dragSourceId && targetId && dragSourceId !== targetId) {
+                    reorderPwas(dragSourceId, targetId);
+                }
+                document.querySelectorAll('.btn-socket.drag-over').forEach(el => el.classList.remove('drag-over'));
+                dragSourceId = null;
+            });
+
+            const power = document.getElementById('socket-power');
+            power.addEventListener('dragstart', (e) => e.preventDefault());
+            const config = document.getElementById('config-open-btn');
+            config.addEventListener('dragstart', (e) => e.preventDefault());
+            const copyBtn = document.getElementById('copy-code-btn');
+            copyBtn.addEventListener('dragstart', (e) => e.preventDefault());
+        }
+
+        function reorderPwas(sourceId, targetId) {
+            const srcIdx = pwaList.findIndex(p => p.id === sourceId);
+            const tgtIdx = pwaList.findIndex(p => p.id === targetId);
+            if (srcIdx === -1 || tgtIdx === -1) return;
+
+            const [item] = pwaList.splice(srcIdx, 1);
+            pwaList.splice(tgtIdx, 0, item);
+
+            const newVisible = [];
+            pwaList.forEach(p => {
+                if (visiblePwas.includes(p.id)) {
+                    newVisible.push(p.id);
+                }
+            });
+            visiblePwas = newVisible;
+
+            saveData();
+            saveVisible();
+            render();
+            playClickSound(900, 0.05, 0.1);
+        }
 
         // ================================================================
         //  RENDU
         // ================================================================
         function render() {
-            const container = document.getElementById('content-area');
+            const grid = document.getElementById('pwa-grid');
             const tabs = document.getElementById('tabs-container');
 
-            container.innerHTML = '';
+            grid.innerHTML = '';
             tabs.innerHTML = '';
 
             pwaList.forEach(pwa => {
-                const iframe = document.createElement('iframe');
-                iframe.id = pwa.id;
-                iframe.src = pwa.url;
-                container.appendChild(iframe);
-
                 const socket = document.createElement('div');
                 socket.className = 'btn-socket';
                 socket.id = `btn-${pwa.id}`;
-                socket.innerHTML = `<div class="led"></div><button class="pwa-btn">${pwa.name}</button>`;
+                socket.dataset.id = pwa.id;
+                socket.draggable = true;
+                const isVis = visiblePwas.includes(pwa.id);
+                if (isVis && isPoweredOn) socket.classList.add('active');
+                socket.innerHTML =
+                    `<div class="led"></div><button class="pwa-btn">${pwa.name}</button>`;
                 socket.addEventListener('click', function(e) {
-                    playClickSound(800, 0.05, 0.1);
-                    switchTab(pwa.id);
+                    playClickSound();
+                    togglePwa(pwa.id);
                 });
                 tabs.appendChild(socket);
             });
 
-            if (isPoweredOn && activePwaId) {
-                const btn = document.getElementById(`btn-${activePwaId}`);
-                if (btn) btn.classList.add('active');
-                const iframe = document.getElementById(activePwaId);
-                if (iframe) iframe.classList.add('active');
+            const visibleItems = pwaList.filter(p => visiblePwas.includes(p.id));
+
+            if (!isPoweredOn || visibleItems.length === 0) {
+                grid.className = 'pwa-grid empty';
+                const msg = document.createElement('div');
+                msg.className = 'empty-msg';
+                msg.textContent = isPoweredOn ? 'Aucune PWA affichée' : '⏻ Allumez le système';
+                grid.appendChild(msg);
+                return;
             }
 
-            updateCoverUI();
+            grid.className = 'pwa-grid';
+
+            visibleItems.forEach(pwa => {
+                const card = document.createElement('div');
+                card.className = 'pwa-card';
+                card.id = `card-${pwa.id}`;
+
+                const header = document.createElement('div');
+                header.className = 'pwa-card-header';
+                header.innerHTML = `
+                    <span class="pwa-card-title">
+                        <span class="dot"></span>
+                        ${pwa.name}
+                    </span>
+                    <button class="pwa-card-close" data-id="${pwa.id}" title="Fermer">✕</button>
+                `;
+                header.querySelector('.pwa-card-close').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    hidePwa(id);
+                    playClickSound(500, 0.04, 0.08);
+                });
+
+                const body = document.createElement('div');
+                body.className = 'pwa-card-body';
+                const iframe = document.createElement('iframe');
+                iframe.id = `iframe-${pwa.id}`;
+                iframe.src = pwa.url;
+                iframe.setAttribute('scrolling', 'auto');
+                iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-modals allow-popups');
+                body.appendChild(iframe);
+
+                card.appendChild(header);
+                card.appendChild(body);
+                grid.appendChild(card);
+            });
+
+            document.querySelectorAll('.btn-socket:not(#socket-power)').forEach(el => {
+                const id = el.dataset.id;
+                const isVis = visiblePwas.includes(id);
+                el.classList.toggle('active', isVis && isPoweredOn);
+            });
         }
 
-        function updateCoverUI() {
-            const overlay = document.getElementById('power-overlay');
-            const coverBtn = document.getElementById('cover-btn');
-            if (coverEnabled && !isPoweredOn) {
-                overlay.classList.add('cover');
-                overlay.textContent = '';
+        // ================================================================
+        //  TOGGLE / HIDE PWA
+        // ================================================================
+        function togglePwa(id) {
+            if (!isPoweredOn) return;
+            const idx = visiblePwas.indexOf(id);
+            if (idx === -1) {
+                visiblePwas.push(id);
             } else {
-                overlay.classList.remove('cover');
-                overlay.textContent = isPoweredOn ? '' : 'SYSTEM OFFLINE';
+                visiblePwas.splice(idx, 1);
             }
-            if (coverBtn) {
-                coverBtn.textContent = coverEnabled ? 'Cover: ON' : 'Cover: OFF';
-                coverBtn.classList.toggle('active', coverEnabled);
+            saveVisible();
+            render();
+        }
+
+        function hidePwa(id) {
+            const idx = visiblePwas.indexOf(id);
+            if (idx !== -1) {
+                visiblePwas.splice(idx, 1);
+                saveVisible();
+                render();
             }
         }
 
         // ================================================================
-        //  POWER (Pointer Events)
+        //  POWER
         // ================================================================
         function startPress(e) {
             playClickSound(600, 0.04, 0.08);
@@ -584,37 +1123,15 @@
         function togglePower() {
             playPowerSound();
             isPoweredOn = !isPoweredOn;
-            const overlay = document.getElementById('power-overlay');
             const socket = document.getElementById('socket-power');
-            if (isPoweredOn) {
-                overlay.classList.add('hidden');
-                socket.classList.add('power-on');
-                if (!activePwaId && pwaList.length) {
-                    activePwaId = pwaList[0].id;
-                }
-                switchTab(activePwaId);
-            } else {
-                overlay.classList.remove('hidden');
-                socket.classList.remove('power-on');
-                activePwaId = null;
-                document.querySelectorAll('.btn-socket:not(#socket-power)').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('iframe').forEach(i => i.classList.remove('active'));
-            }
-            updateCoverUI();
-        }
+            socket.classList.toggle('power-on', isPoweredOn);
 
-        // ================================================================
-        //  SWITCH TAB
-        // ================================================================
-        function switchTab(id) {
-            if (!isPoweredOn) return;
-            document.querySelectorAll('.btn-socket:not(#socket-power)').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('iframe').forEach(i => i.classList.remove('active'));
-            const btn = document.getElementById(`btn-${id}`);
-            if (btn) btn.classList.add('active');
-            const iframe = document.getElementById(id);
-            if (iframe) iframe.classList.add('active');
-            activePwaId = id;
+            if (isPoweredOn && visiblePwas.length === 0 && pwaList.length > 0) {
+                visiblePwas = [pwaList[0].id];
+                saveVisible();
+            }
+
+            render();
         }
 
         // ================================================================
@@ -624,6 +1141,7 @@
             document.getElementById('config-modal').classList.add('open');
             populateModal();
         }
+
         function closeModal() {
             document.getElementById('config-modal').classList.remove('open');
         }
@@ -637,12 +1155,14 @@
 
                 const nameRow = document.createElement('div');
                 nameRow.className = 'field-row';
-                nameRow.innerHTML = `<label>Nom</label><input type="text" value="${item.name}" id="modal-name-${item.id}" />`;
+                nameRow.innerHTML =
+                    `<label>Nom</label><input type="text" value="${item.name}" id="modal-name-${item.id}" />`;
                 div.appendChild(nameRow);
 
                 const urlRow = document.createElement('div');
                 urlRow.className = 'field-row';
-                urlRow.innerHTML = `<label>Lien</label><input type="url" value="${item.url}" id="modal-url-${item.id}" />`;
+                urlRow.innerHTML =
+                    `<label>Lien</label><input type="url" value="${item.url}" id="modal-url-${item.id}" />`;
                 div.appendChild(urlRow);
 
                 const btnGroup = document.createElement('div');
@@ -655,10 +1175,12 @@
                 delBtn.addEventListener('click', e => {
                     e.stopPropagation();
                     const id = e.currentTarget.dataset.id;
-                    if (confirm(`Supprimer "${pwaList.find(i => i.id === id)?.name}" ?`)) {
+                    const pwa = pwaList.find(i => i.id === id);
+                    if (pwa && confirm(`Supprimer "${pwa.name}" ?`)) {
                         pwaList = pwaList.filter(i => i.id !== id);
-                        if (activePwaId === id) activePwaId = null;
+                        visiblePwas = visiblePwas.filter(i => i !== id);
                         saveData();
+                        saveVisible();
                         render();
                         populateModal();
                     }
@@ -696,15 +1218,14 @@
                 }
             });
             saveData();
-            render();
-            if (isPoweredOn && activePwaId) {
-                const iframe = document.getElementById(activePwaId);
-                const pwa = pwaList.find(i => i.id === activePwaId);
-                if (iframe && pwa) {
-                    iframe.src = pwa.url;
-                    iframe.classList.add('active');
+            pwaList.forEach(p => {
+                const iframe = document.getElementById(`iframe-${p.id}`);
+                if (iframe) {
+                    const pwa = pwaList.find(i => i.id === p.id);
+                    if (pwa) iframe.src = pwa.url;
                 }
-            }
+            });
+            render();
             closeModal();
         }
 
@@ -713,15 +1234,21 @@
             const urlInput = document.getElementById('add-url');
             const name = nameInput.value.trim();
             const url = urlInput.value.trim();
-            if (!name || !url) { alert('Veuillez remplir le nom et l\'URL.'); return; }
+            if (!name || !url) {
+                alert('Veuillez remplir le nom et l\'URL.');
+                return;
+            }
             const newId = 'pwa-' + Date.now();
             pwaList.push({ id: newId, name, url });
             saveData();
             nameInput.value = '';
             urlInput.value = '';
+            if (isPoweredOn) {
+                visiblePwas.push(newId);
+                saveVisible();
+            }
             render();
             populateModal();
-            if (isPoweredOn) switchTab(newId);
             playClickSound(1000, 0.04, 0.08);
         }
 
@@ -732,11 +1259,24 @@
             playClickSound(700, 0.04, 0.08);
         }
 
+        function updateCoverUI() {
+            const coverBtn = document.getElementById('cover-btn');
+            if (coverBtn) {
+                coverBtn.textContent = coverEnabled ? 'Cover: ON' : 'Cover: OFF';
+                coverBtn.classList.toggle('active', coverEnabled);
+            }
+        }
+
+        // ================================================================
+        //  ÉVÉNEMENTS
+        // ================================================================
         document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
         document.getElementById('modal-save-btn').addEventListener('click', saveModalChanges);
         document.getElementById('add-btn').addEventListener('click', addItem);
         document.getElementById('cover-btn').addEventListener('click', toggleCover);
+        document.getElementById('config-open-btn').addEventListener('click', openModal);
+        document.getElementById('copy-code-btn').addEventListener('click', copyCurrentCode);
 
         // ================================================================
         //  POSTMESSAGE
@@ -744,7 +1284,7 @@
         window.addEventListener('message', (event) => {
             const msg = event.data;
             if (msg?.type === 'HUB_ROUTER' && msg.target) {
-                const iframe = document.getElementById(msg.target);
+                const iframe = document.getElementById(`iframe-${msg.target}`);
                 if (iframe) {
                     iframe.contentWindow.postMessage(msg.payload, '*');
                 }
@@ -762,20 +1302,36 @@
         //  INIT
         // ================================================================
         loadData();
+
+        // Si aucune PWA visible mais que le power est on, on allume
+        if (visiblePwas.length > 0) {
+            isPoweredOn = true;
+            document.getElementById('socket-power').classList.add('power-on');
+        } else {
+            isPoweredOn = false;
+            document.getElementById('socket-power').classList.remove('power-on');
+        }
+
         render();
-        document.getElementById('power-overlay').classList.remove('hidden');
-        document.getElementById('socket-power').classList.remove('power-on');
         updateCoverUI();
+        initDragDrop();
+
+        // ================================================================
+        //  KEYBOARD SHORTCUTS
+        // ================================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('config-modal').classList.contains('open')) {
+                    closeModal();
+                }
+            }
+            if (e.key === 'p' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                const target = e.target;
+                if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
+                    togglePower();
+                }
+            }
+        });
     </script>
-
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker enregistré !'))
-        .catch(err => console.error('Erreur SW :', err));
-    });
-  }
-</script>
-</body></html>
+</body>
+</html>
